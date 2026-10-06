@@ -1,13 +1,30 @@
 {
+  "id": "/Jamun/?app=jamun2",
   "name": "자문자답",
   "short_name": "자문자답",
-  "start_url": "./",
-  "scope": "./",
+  "start_url": "/Jamun/",
+  "scope": "/Jamun/",
   "display": "standalone",
   "background_color": "#1c1a17",
   "theme_color": "#1c1a17",
   "icons": [
-    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable"},
-    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}
+    {
+      "src": "/Jamun/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/Jamun/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/Jamun/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ]
 }
