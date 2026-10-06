@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cut">
+<title>자문자답</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1c1a17">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+:root{
+  --bg:#f6f3ee; --card:#fffdf9; --ink:#24211d; --sub:#8a8378; --line:#e5dfd4;
+  --accent:#b5562c; --accent-soft:#f3e3d9; --q:#24211d;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#1c1a17; --card:#26231f; --ink:#ece6dc; --sub:#9a9286; --line:#3a3530;
+    --accent:#e08a5c; --accent-soft:#3b2b22; --q:#f3ede4; }
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:-apple-system,"Pretendard","Noto Sans KR","Apple SD Gothic Neo",system-ui,sans-serif;
+  font-size:16px;line-height:1.6}
+body{padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+.wrap{max-width:640px;margin:0 auto;padding:16px 16px 120px}
+header{display:flex;align-items:center;justify-content:space-between;padding:8px 0 16px}
+h1{font-size:22px;margin:0;letter-spacing:-.5px}
+h1 span{color:var(--accent)}
+.iconbtn{background:none;border:none;color:var(--sub);font-size:22px;padding:6px 8px;cursor:pointer}
+.tabs{display:flex;gap:6px;margin-bottom:14px;overflow-x:auto}
+.tab{border:1px solid var(--line);background:var(--card);color:var(--sub);border-radius:999px;
+  padding:6px 14px;font-size:14px;white-space:nowrap;cursor:pointer}
+.tab.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.search{width:100%;border:1px solid var(--line);background:var(--card);color:var(--ink);
+  border-radius:12px;padding:10px 14px;font-size:15px;margin-bottom:14px;outline:none}
+.revisit{background:var(--accent-soft);border-radius:16px;padding:16px;margin-bottom:16px;cursor:pointer}
+.revisit small{color:var(--accent);font-weight:600;font-size:12px;letter-spacing:.3px}
+.revisit .qt{font-size:17px;font-weight:600;margin-top:4px;color:var(--q)}
+.revisit .meta{color:var(--sub);font-size:13px;margin-top:4px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;
+  margin-bottom:10px;cursor:pointer}
+.card .qt{font-weight:600;color:var(--q);word-break:keep-all}
+.card .meta{display:flex;gap:10px;color:var(--sub);font-size:13px;margin-top:6px}
+.badge{color:var(--accent);font-weight:600}
+.pin{color:var(--accent)}
+.empty{text-align:center;color:var(--sub);padding:48px 12px}
+.fab{position:fixed;right:20px;bottom:calc(24px + env(safe-area-inset-bottom));width:58px;height:58px;
+  border-radius:50%;border:none;background:var(--accent);color:#fff;font-size:30px;
+  box-shadow:0 6px 18px rgba(0,0,0,.2);cursor:pointer}
+/* detail */
+.back{background:none;border:none;color:var(--sub);font-size:15px;padding:6px 0;cursor:pointer}
+.dq{font-size:21px;font-weight:700;line-height:1.45;margin:10px 0 4px;color:var(--q);word-break:keep-all;white-space:pre-wrap}
+.dmeta{color:var(--sub);font-size:13px;margin-bottom:12px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.btn{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;
+  padding:7px 12px;font-size:14px;cursor:pointer}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.danger{color:#c0392b}
+textarea{width:100%;min-height:120px;border:1px solid var(--line);background:var(--card);color:var(--ink);
+  border-radius:12px;padding:12px 14px;font-size:16px;font-family:inherit;line-height:1.6;outline:none;resize:vertical}
+textarea:focus,.search:focus{border-color:var(--accent)}
+.compose{margin-bottom:22px}
+.compose .row{display:flex;justify-content:flex-end;gap:8px;margin-top:8px}
+.timeline{border-left:2px solid var(--line);margin-left:6px;padding-left:16px}
+.ans{position:relative;margin-bottom:20px}
+.ans::before{content:"";position:absolute;left:-23px;top:7px;width:12px;height:12px;border-radius:50%;
+  background:var(--accent);border:2px solid var(--bg)}
+.ans .when{font-size:12px;color:var(--sub);display:flex;justify-content:space-between}
+.ans .when button{background:none;border:none;color:var(--sub);font-size:12px;cursor:pointer;padding:0 0 0 10px}
+.ans .txt{white-space:pre-wrap;word-break:break-word;margin-top:4px}
+.ans .gap{font-size:11px;color:var(--sub);margin-bottom:4px}
+/* sheet */
+.sheet{position:fixed;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:flex-end;justify-content:center;z-index:10}
+.sheet .box{background:var(--bg);width:100%;max-width:640px;border-radius:20px 20px 0 0;
+  padding:20px 16px calc(20px + env(safe-area-inset-bottom))}
+.sheet h3{margin:0 0 10px;font-size:17px}
+.sheet .row{display:flex;justify-content:flex-end;gap:8px;margin-top:10px}
+.hint{font-size:13px;color:var(--sub);margin:4px 0 10px}
+.menu button{display:block;width:100%;text-align:left;background:var(--card);border:1px solid var(--line);
+  color:var(--ink);border-radius:12px;padding:14px;margin-bottom:8px;font-size:15px;cursor:pointer}
+.toast{position:fixed;left:50%;bottom:100px;transform:translateX(-50%);background:var(--ink);color:var(--bg);
+  padding:8px 16px;border-radius:999px;font-size:14px;z-index:20}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<script>
+const KEY='jamun.v1';
+let db=load(), view={name:'list',filter:'all',q:''};
+
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||{questions:[]}}catch(e){return{questions:[]}}}
+function save(){localStorage.setItem(KEY,JSON.stringify(db))}
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const esc=s=>s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function fmt(t){const d=new Date(t);return `${d.getFullYear()}.${d.getMonth()+1}.${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`}
+function ago(t){const s=(Date.now()-t)/1000;if(s<60)return'방금';if(s<3600)return Math.floor(s/60)+'분 전';
+  if(s<86400)return Math.floor(s/3600)+'시간 전';const d=Math.floor(s/86400);if(d<30)return d+'일 전';
+  if(d<365)return Math.floor(d/30)+'달 전';return Math.floor(d/365)+'년 전'}
+function gap(a,b){const d=Math.round((b-a)/86400000);return d<1?null:(d<30?d+'일 뒤':(d<365?Math.floor(d/30)+'달 뒤':Math.floor(d/365)+'년 뒤'))}
+const lastTouch=q=>q.answers.length?q.answers[q.answers.length-1].at:q.at;
+function toast(m){const t=document.createElement('div');t.className='toast';t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),1600)}
+
+function revisitPick(){
+  const qs=db.questions.filter(q=>!q.archived);
+  if(qs.length<2)return null;
+  // 가장 오래 손대지 않은 질문
+  const q=qs.slice().sort((a,b)=>lastTouch(a)-lastTouch(b))[0];
+  return Date.now()-lastTouch(q)>3*86400000?q:null;
+}
+
+function render(){
+  const app=document.getElementById('app');
+  if(view.name==='detail'){renderDetail(app);return}
+  let qs=db.questions.slice();
+  if(view.filter==='open')qs=qs.filter(q=>!q.answers.length&&!q.archived);
+  else if(view.filter==='pinned')qs=qs.filter(q=>q.pinned);
+  else if(view.filter==='archived')qs=qs.filter(q=>q.archived);
+  else qs=qs.filter(q=>!q.archived);
+  if(view.q){const k=view.q.toLowerCase();qs=qs.filter(q=>q.text.toLowerCase().includes(k)||q.answers.some(a=>a.text.toLowerCase().includes(k)))}
+  qs.sort((a,b)=>(b.pinned-a.pinned)||(lastTouch(b)-lastTouch(a)));
+  const rv=view.filter==='all'&&!view.q?revisitPick():null;
+  const openCount=db.questions.filter(q=>!q.answers.length&&!q.archived).length;
+  app.innerHTML=`
+  <header><h1>자문<span>자답</span></h1><button class="iconbtn" onclick="openMenu()">⋯</button></header>
+  <input class="search" placeholder="질문·답 검색" value="${esc(view.q)}" oninput="view.q=this.value;renderList()">
+  <div class="tabs">
+    ${[['all','전체'],['open',`답 없음${openCount?' '+openCount:''}`],['pinned','고정'],['archived','보관']].map(([k,l])=>
+      `<button class="tab ${view.filter===k?'on':''}" onclick="view.filter='${k}';render()">${l}</button>`).join('')}
+  </div>
+  <div id="list"></div>
+  <button class="fab" onclick="newQuestion()">＋</button>`;
+  renderList(qs,rv);
+}
+function renderList(qs,rv){
+  if(!qs){render();return}
+  const el=document.getElementById('list');
+  let h='';
+  if(rv)h+=`<div class="revisit" onclick="openQ('${rv.id}')"><small>다시 마주할 질문</small>
+    <div class="qt">${esc(rv.text)}</div><div class="meta">마지막으로 들여다본 지 ${ago(lastTouch(rv))}</div></div>`;
+  if(!qs.length)h+=`<div class="empty">${db.questions.length?'해당하는 질문이 없어.':'아직 질문이 없어.<br>오른쪽 아래 ＋ 로 첫 질문을 적어봐.'}</div>`;
+  for(const q of qs){
+    h+=`<div class="card" onclick="openQ('${q.id}')"><div class="qt">${q.pinned?'<span class="pin">📌 </span>':''}${esc(q.text)}</div>
+    <div class="meta">${q.answers.length?`<span class="badge">답 ${q.answers.length}</span>`:'<span>답 없음</span>'}<span>${ago(lastTouch(q))}</span></div></div>`;
+  }
+  el.innerHTML=h;
+}
+// search input re-render without losing focus
+const _rl=renderList;renderList=function(qs,rv){if(qs)return _rl(qs,rv);
+  let list=db.questions.slice();const f=view.filter;
+  if(f==='open')list=list.filter(q=>!q.answers.length&&!q.archived);else if(f==='pinned')list=list.filter(q=>q.pinned);
+  else if(f==='archived')list=list.filter(q=>q.archived);else list=list.filter(q=>!q.archived);
+  if(view.q){const k=view.q.toLowerCase();list=list.filter(q=>q.text.toLowerCase().includes(k)||q.answers.some(a=>a.text.toLowerCase().includes(k)))}
+  list.sort((a,b)=>(b.pinned-a.pinned)||(lastTouch(b)-lastTouch(a)));
+  _rl(list,f==='all'&&!view.q?revisitPick():null)};
+
+function getQ(id){return db.questions.find(q=>q.id===id)}
+function openQ(id){view={...view,name:'detail',id};history.pushState({d:id},'');render();scrollTo(0,0)}
+window.onpopstate=()=>{if(view.name==='detail'){view.name='list';render()}};
+function goBack(){if(history.state&&history.state.d)history.back();else{view.name='list';render()}}
+
+function renderDetail(app){
+  const q=getQ(view.id);if(!q){view.name='list';render();return}
+  let prev=q.at;
+  const ans=q.answers.map(a=>{const g=gap(prev,a.at);prev=a.at;return `<div class="ans">
+    ${g?`<div class="gap">↳ ${g}</div>`:''}
+    <div class="when"><span>${fmt(a.at)}</span><span><button onclick="editAns('${a.id}')">수정</button><button onclick="delAns('${a.id}')">삭제</button></span></div>
+    <div class="txt">${esc(a.text)}</div></div>`}).join('');
+  app.innerHTML=`
+  <button class="back" onclick="goBack()">← 목록</button>
+  <div class="dq">${esc(q.text)}</div>
+  <div class="dmeta">${fmt(q.at)}에 물음 · 답 ${q.answers.length}개</div>
+  <div class="actions">
+    <button class="btn" onclick="togglePin()">${q.pinned?'고정 해제':'📌 고정'}</button>
+    <button class="btn" onclick="editQ()">질문 수정</button>
+    <button class="btn" onclick="toggleArchive()">${q.archived?'보관 해제':'보관'}</button>
+    <button class="btn danger" onclick="delQ()">삭제</button>
+  </div>
+  <div class="compose">
+    <textarea id="ansIn" placeholder="${q.answers.length?'지금의 나는 뭐라고 답할까?':'첫 답을 적어봐. 짧아도 돼.'}"></textarea>
+    <div class="row"><button class="btn primary" onclick="addAns()">답 남기기</button></div>
+  </div>
+  ${q.answers.length?`<div class="timeline">${ans}</div>`:''}`;
+  const ta=document.getElementById('ansIn');const dk='draft.'+q.id;
+  ta.value=localStorage.getItem(dk)||'';ta.oninput=()=>localStorage.setItem(dk,ta.value);
+}
+
+function sheet(title,hint,val,onOk,okLabel='저장'){
+  const s=document.createElement('div');s.className='sheet';
+  s.innerHTML=`<div class="box"><h3>${title}</h3>${hint?`<div class="hint">${hint}</div>`:''}
+  <textarea id="sheetIn"></textarea><div class="row"><button class="btn" id="sc">취소</button><button class="btn primary" id="so">${okLabel}</button></div></div>`;
+  document.body.appendChild(s);const ta=s.querySelector('#sheetIn');ta.value=val||'';setTimeout(()=>ta.focus(),50);
+  s.querySelector('#sc').onclick=()=>s.remove();s.onclick=e=>{if(e.target===s)s.remove()};
+  s.querySelector('#so').onclick=()=>{const v=ta.value.trim();if(!v)return;onOk(v);s.remove()};
+}
+function newQuestion(){sheet('새 질문','지금 답하지 않아도 돼. 질문만 적어두고 나중에 돌아와.','',v=>{
+  const q={id:uid(),text:v,at:Date.now(),answers:[]};db.questions.push(q);save();openQ(q.id)},'질문 적기')}
+function editQ(){const q=getQ(view.id);sheet('질문 수정','',q.text,v=>{q.text=v;save();render()})}
+function addAns(){const ta=document.getElementById('ansIn');const v=ta.value.trim();if(!v)return;
+  const q=getQ(view.id);q.answers.push({id:uid(),text:v,at:Date.now()});localStorage.removeItem('draft.'+q.id);save();render();toast('답을 남겼어')}
+function editAns(id){const q=getQ(view.id),a=q.answers.find(x=>x.id===id);sheet('답 수정','',a.text,v=>{a.text=v;save();render()})}
+function delAns(id){if(!confirm('이 답을 지울까?'))return;const q=getQ(view.id);q.answers=q.answers.filter(x=>x.id!==id);save();render()}
+function togglePin(){const q=getQ(view.id);q.pinned=!q.pinned;save();render()}
+function toggleArchive(){const q=getQ(view.id);q.archived=!q.archived;save();render();toast(q.archived?'보관함으로 옮겼어':'다시 꺼냈어')}
+function delQ(){if(!confirm('질문과 모든 답을 지울까? 되돌릴 수 없어.'))return;db.questions=db.questions.filter(q=>q.id!==view.id);save();goBack()}
+
+function openMenu(){
+  const s=document.createElement('div');s.className='sheet';
+  s.innerHTML=`<div class="box menu"><h3>백업</h3><div class="hint">기록은 이 폰 안에만 저장돼. 가끔 백업 파일로 내려받아 둬.</div>
+  <button id="ex">📤 백업 파일 내보내기</button><button id="im">📥 백업 파일 불러오기</button><button id="cl">닫기</button></div>`;
+  document.body.appendChild(s);s.onclick=e=>{if(e.target===s)s.remove()};
+  s.querySelector('#cl').onclick=()=>s.remove();
+  s.querySelector('#ex').onclick=()=>{const b=new Blob([JSON.stringify(db,null,2)],{type:'application/json'});
+    const a=document.createElement('a');a.href=URL.createObjectURL(b);const d=new Date();
+    a.download=`자문자답-${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}.json`;a.click();s.remove()};
+  s.querySelector('#im').onclick=()=>{const i=document.createElement('input');i.type='file';i.accept='.json,application/json';
+    i.onchange=()=>{const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!Array.isArray(d.questions))throw 0;
+      if(!confirm(`질문 ${d.questions.length}개를 불러올까? 지금 기록과 합쳐져.`))return;
+      const ids=new Set(db.questions.map(q=>q.id));d.questions.forEach(q=>{if(!ids.has(q.id))db.questions.push(q)});save();s.remove();render();toast('불러왔어')}
+      catch(e){alert('백업 파일을 읽을 수 없어.')}};r.readAsText(i.files[0])};i.click()};
+}
+
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js');
+if(navigator.storage&&navigator.storage.persist)navigator.storage.persist();
+render();
+</script>
+</body>
+</html>
